@@ -1,0 +1,67 @@
+﻿@page "/counter"
+
+
+<h1>Family Tree</h1>
+
+@if (rootNode != null)
+{
+    @BuildTree(rootNode, 0)
+}
+
+@code {
+    public class Node
+    {
+        public string Name { get; set; }
+        public List<Node> Children { get; set; }
+    }
+
+    private Node rootNode;
+
+    protected override void OnInitialized()
+    {
+    // Sample data
+        rootNode = new Node
+        {
+            Name = "Root",
+            Children = new List<Node>
+            {
+                new Node
+                {
+                    Name = "Child 1",
+                    Children = new List<Node>
+                    {
+                        new Node { Name = "Grandchild 1" },
+                        new Node { Name = "Grandchild 2" }
+                    }
+                },
+                new Node
+                {
+                    Name = "Child 2",
+                    Children = new List<Node>
+                    {
+                        new Node { Name = "Grandchild 3" },
+                        new Node { Name = "Grandchild 4" }
+                    }
+                }
+            }
+        };
+    }
+
+    private RenderFragment BuildTree(Node node, int level) => __builder =>
+    {
+    // Render node name
+        __builder.OpenElement(0, "div");
+        __builder.AddAttribute(1, "style", $"margin-left: {level * 20}px");
+        __builder.AddContent(2, node.Name);
+        __builder.CloseElement();
+
+    // Render children
+        if (node.Children != null)
+        {
+            foreach (var child in node.Children)
+            {
+                __builder.AddContent(3, BuildTree(child, level + 1));
+            }
+        }
+    };
+}

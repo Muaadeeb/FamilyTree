@@ -1,0 +1,17 @@
+﻿@using MudBlazor
+@using MudServer.Pages.FamilyTree
+
+<MudTreeViewItem T="FamilyTree6.NodeData" Text="@Node.Name">
+    @if (Node.Children != null)
+    {
+        @foreach (var child in Node.Children)
+        {
+            <Node6 Node="child"></Node6>
+        }
+    }
+</MudTreeViewItem>
+
+@code {
+    [Parameter]
+    public FamilyTree6.NodeData Node { get; set; }
+}

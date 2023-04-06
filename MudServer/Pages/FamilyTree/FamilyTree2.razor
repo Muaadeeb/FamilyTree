@@ -1,0 +1,114 @@
+﻿@page "/family-tree-2"
+
+<h1>Family Tree</h1>
+
+@if (rootNode != null)
+{
+    @BuildTree(rootNode, 0)
+}
+
+<style>
+    .node {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 5px;
+        background-color: #f9f9f9;
+    }
+
+        .node:hover {
+            background-color: #e9e9e9;
+        }
+
+    .node-icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 5px;
+    }
+
+    .node-content {
+        display: flex;
+        align-items: center;
+    }
+
+    .node-children {
+        margin-left: 20px;
+    }
+</style>
+
+@code {
+    public class Node
+    {
+        public string Name { get; set; }
+        public List<Node> Children { get; set; }
+        public bool IsExpanded { get; set; }
+    }
+
+    private Node rootNode;
+
+    protected override void OnInitialized()
+    {
+        // Sample data
+        rootNode = new Node
+            {
+                Name = "Root",
+                Children = new List<Node>
+            {
+                new Node
+                {
+                    Name = "Child 1",
+                    Children = new List<Node>
+                    {
+                        new Node { Name = "Grandchild 1" },
+                        new Node { Name = "Grandchild 2" }
+                    }
+                },
+                new Node
+                {
+                    Name = "Child 2",
+                    Children = new List<Node>
+                    {
+                        new Node { Name = "Grandchild 3" },
+                        new Node { Name = "Grandchild 4" }
+                    }
+                }
+            }
+            };
+    }
+
+    private RenderFragment BuildTree(Node node, int level) => __builder =>
+    {
+        // Render node
+        __builder.OpenElement(0, "div");
+        __builder.AddAttribute(1, "class", "node");
+        __builder.AddAttribute(2, "title", $"Level {level}");
+        __builder.OpenElement(3, "div");
+        __builder.AddAttribute(4, "class", "node-content");
+        __builder.OpenElement(5, "img");
+        __builder.AddAttribute(6, "class", "node-icon");
+        __builder.AddAttribute(7, "src", node.Children != null ? "folder.svg" : "file.svg");
+        __builder.CloseElement();
+        if (node.Children != null)
+        {
+            __builder.OpenElement(8, "button");
+            __builder.AddAttribute(9, "onclick", EventCallback.Factory.Create(this, () => node.IsExpanded = !node.IsExpanded));
+            __builder.AddContent(10, node.IsExpanded ? "-" : "+");
+            __builder.CloseElement();
+        }
+        __builder.AddContent(11, node.Name);
+        __builder.CloseElement();
+
+        // Render children
+        if (node.Children != null && node.IsExpanded)
+        {
+            __builder.OpenElement(12, "div");
+            __builder.AddAttribute(13, "class", "node-children");
+            foreach (var child in node.Children)
+            {
+                __builder.AddContent(14, BuildTree(child, level + 1));
+            }
+            __builder.CloseElement();
+        }
+
+        __builder.CloseElement();
+    };
+}

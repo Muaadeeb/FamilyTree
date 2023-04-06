@@ -1,0 +1,87 @@
+﻿@page "/family-tree-4"
+
+@using MudBlazor
+
+<h1>Family Tree</h1>
+
+@if (rootNode != null)
+{
+    <MudTreeView T="NodeData">
+        @BuildTree(rootNode)
+    </MudTreeView>
+}
+
+@code {
+    public class NodeData
+    {
+        public string Name { get; set; }
+        public List<NodeData> Children { get; set; }
+        public bool IsExpanded { get; set; }
+    }
+
+    private NodeData rootNode;
+
+    protected override void OnInitialized()
+    {
+        // Sample data
+        rootNode = new NodeData
+            {
+                Name = "Root",
+                Children = new List<NodeData>
+            {
+                new NodeData
+                {
+                    Name = "Child 1",
+                    Children = new List<NodeData>
+                    {
+                        new NodeData { Name = "Grandchild 1" },
+                        new NodeData { Name = "Grandchild 2" }
+                    }
+                },
+                new NodeData
+                {
+                    Name = "Child 2",
+                    Children = new List<NodeData>
+                    {
+                        new NodeData { Name = "Grandchild 3" },
+                        new NodeData { Name = "Grandchild 4" }
+                    }
+                },
+                new NodeData
+                {
+                    Name = "Child 3",
+                    Children = new List<NodeData>
+                    {
+                        new NodeData { Name = "Grandchild 5" },
+                        new NodeData
+                        {
+                            Name = "Grandchild 6",
+                            Children = new List<NodeData>
+                            {
+                                new NodeData { Name = "Great Grandchild 1" },
+                                new NodeData { Name = "Great Grandchild 2" }
+                            }
+                        }
+                    }
+                }
+            }
+            };
+    }
+
+    private RenderFragment BuildTree(NodeData node) => __builder =>
+    {
+        __builder.OpenComponent<MudTreeViewItem<NodeData>>(0);
+        __builder.AddAttribute(1, "Text", node.Name);
+        if (node.Children != null)
+        {
+            __builder.AddAttribute(2, "ChildContent", (RenderFragment)((__builder2) =>
+            {
+                foreach (var child in node.Children)
+                {
+                    __builder2.AddContent(3, BuildTree(child));
+                }
+            }));
+        }
+        __builder.CloseComponent();
+    };
+}

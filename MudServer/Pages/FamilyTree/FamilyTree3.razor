@@ -1,0 +1,98 @@
+﻿@page "/family-tree-3"
+
+
+<h1>Family Tree</h1>
+
+@if (rootNode != null)
+{
+    <NodeComponent Node="rootNode" Level="0"></NodeComponent>
+}
+
+
+<style>
+    .node {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .node:hover {
+        background-color: #e9e9e9;
+    }
+
+    .node-icon {
+        width: 16px;
+        height: 16px;
+        margin-right: 5px;
+    }
+
+    .node-content {
+        display: flex;
+        align-items: center;
+    }
+
+    .node-children {
+        margin-left: 20px;
+    }
+</style>
+
+@code {
+    public class NodeData
+    {
+        public string Name { get; set; }
+        public List<NodeData> Children { get; set; }
+        public bool IsExpanded { get; set; }
+    }
+
+    private NodeData rootNode;
+
+    protected override void OnInitialized()
+    {
+    // Sample data
+        rootNode = new NodeData
+        {
+            Name = "Root",
+            Children = new List<NodeData>
+            {
+                new NodeData
+                {
+                    Name = "Child 1",
+                    Children = new List<NodeData>
+                    {
+                        new NodeData { Name = "Grandchild 1" },
+                        new NodeData { Name = "Grandchild 2" }
+                    }
+                },
+                new NodeData
+                {
+                    Name = "Child 2",
+                    Children = new List<NodeData>
+                    {
+                        new NodeData { Name = "Grandchild 3" },
+                        new NodeData { Name = "Grandchild 4" }
+                    }
+                },
+                new NodeData
+                {
+                    Name = "Child 3",
+                    Children = new List<NodeData>
+                    {
+                        new NodeData { Name = "Grandchild 5" },
+                        new NodeData
+                        {
+                            Name = "Grandchild 6",
+                            Children = new List<NodeData>
+                            {
+                                new NodeData { Name = "Greatgrandchild 1" },
+                                new NodeData { Name = "Greatgrandchild 2" }
+                            }
+                        }
+                    }
+                }
+
+
+            }
+        };
+    }
+}

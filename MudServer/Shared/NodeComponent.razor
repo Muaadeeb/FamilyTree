@@ -1,0 +1,28 @@
+﻿@using MudServer.Pages.FamilyTree
+<div class="node" title=$"Level {Level}">
+    <div class="node-content">
+        <img class="node-icon" src=@(Node.Children != null ? "folder.svg" : "file.svg") />
+        @if (Node.Children != null)
+        {
+            <button @onclick="() => Node.IsExpanded = !Node.IsExpanded">@((Node.IsExpanded ? "-" : "+"))</button>
+        }
+        @Node.Name
+    </div>
+    @if (Node.Children != null && Node.IsExpanded)
+    {
+        <div class="node-children">
+            @foreach (var child in Node.Children)
+            {
+                <NodeComponent Node="child" Level="Level + 1"></NodeComponent>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public FamilyTree3.NodeData Node { get; set; }
+
+    [Parameter]
+    public int Level { get; set; }
+}
